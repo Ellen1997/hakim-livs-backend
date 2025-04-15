@@ -1,4 +1,5 @@
 require('dotenv').config()
+
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -44,7 +45,7 @@ app.use(express.static(path.join(__dirname, 'frontend')));
 
 
 app.get('/', (req, res) => {
-    res.send("Backend");
+    res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
 
