@@ -101,7 +101,7 @@ router.post('/', authenticateToken, isAdmin, async (req, res) => {
 });
 
 
-router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
+router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const { name, description, price, stock, category, img } = req.body;

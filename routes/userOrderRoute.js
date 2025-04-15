@@ -4,9 +4,9 @@ const { authenticateToken, isAdmin } = require("../middleware/auth.js")
 
 const router = express.Router();
 
-// HÄR SKA DET VARA AUTHTOKEN OCH ISADMIN också (!!!)
+// HÄR SKA DET VARA AUTHTOKEN OCH ISADMIN också (!!!) på alla som har med order å göra
 
-router.get("/", authenticateToken, isAdmin, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const {status} = req.query;
         let query = {}
@@ -66,9 +66,6 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-//i post måste vi lösa så vi slipper skriva in total MANUELLT !!! vet ej hur ännu 
-//typ i const order att total = price sum eller nått 
-
 router.post('/', authenticateToken, async (req, res) => {
     try {
       const { products, total } = req.body;
@@ -95,7 +92,7 @@ router.post('/', authenticateToken, async (req, res) => {
     }
   });
 
-
+//NEDAN OCKSÅ BARA FÖR ADMIN så man kan ändra status mellan pending, paid, shipped osv
 
 router.put('/:id', async (req, res) => {
 

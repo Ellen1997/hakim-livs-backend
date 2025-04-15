@@ -6,7 +6,7 @@ const router = express.Router();
 const User = require("../models/User.js");
 const { authenticateToken, isAdmin } = require("../middleware/auth.js")
 
-router.get("/", authenticateToken, isAdmin, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const userName = req.query.User;
         const query = userName ? { username: userName} : {};
