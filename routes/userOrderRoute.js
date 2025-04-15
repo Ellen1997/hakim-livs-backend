@@ -1,6 +1,6 @@
 const express = require("express");
 const Order = require('../models/userOrders.js');
-const { authenticateToken, isAdmin } = require("../../backend/middleware/middleware/auth.js")
+const { authenticateToken, isAdmin } = require("../../backend/middleware/auth.js")
 
 const router = express.Router();
 

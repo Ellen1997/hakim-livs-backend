@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const router = express.Router();
 const User = require("../models/User.js");
-const { authenticateToken, isAdmin } = require("../../backend/middleware/middleware/auth.js")
+const { authenticateToken, isAdmin } = require("../../backend/middleware/auth.js")
 
 router.get("/", authenticateToken, isAdmin, async (req, res) => {
     try {
