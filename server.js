@@ -14,9 +14,15 @@ const path = require("path");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const allowedFrontend = [
+    "https://hakim-livs-frontend.vercel.app/"
+]
 
 
-app.use(cors());
+app.use(cors({
+    origin: allowedFrontend,
+    credentials: true,
+}));
 app.use(express.json());
 
 
@@ -39,8 +45,8 @@ app.use("/api/orders", userOrders)
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '..', 'index.html'));
+app.get('/', (req, res) => {
+    res.send("Backend");
 });
 
 
