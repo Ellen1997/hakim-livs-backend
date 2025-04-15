@@ -1,7 +1,7 @@
 const express = require("express");
 const category = require("../models/category.js");
 const mongoproducts = require('../models/mongoproducts');
-const { authenticateToken, isAdmin } = require("../../backend/middleware/auth.js")
+const { authenticateToken, isAdmin } = require("../middleware/auth.js")
 
 const router = express.Router();
 

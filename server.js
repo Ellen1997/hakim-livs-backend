@@ -1,8 +1,6 @@
 require('dotenv').config()
-
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const mongproductsRoute = require("./routes/mongproducts.js");
 const categorysRoute = require("./routes/categoryRoute.js")
@@ -42,7 +40,7 @@ app.use("/api/category", categorysRoute);
 app.use("/api/users", auth);
 app.use("/api/orders", userOrders)
 
-app.use(express.static(path.resolve(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'frontend')));
 
 
 app.get('/', (req, res) => {
