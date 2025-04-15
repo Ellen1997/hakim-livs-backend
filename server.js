@@ -14,7 +14,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const allowedFrontend = [
-    "https://hakim-livs-frontend.vercel.app/"
+    "https://hakim-livs-frontend.vercel.app",
+    "http://localhost:3000"
 ]
 
 
@@ -40,9 +41,6 @@ app.use("/api/products", mongproductsRoute);
 app.use("/api/category", categorysRoute);
 app.use("/api/users", auth);
 app.use("/api/orders", userOrders)
-
-app.use(express.static(path.join(__dirname, 'frontend')));
-
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "views", "index.html"));
