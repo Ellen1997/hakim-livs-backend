@@ -33,9 +33,13 @@ router.post('/register', async (req, res) => {
     await user.save();
 
     const token = jwt.sign(
-      { id: user._id, isAdmin: user.isAdmin },
+      { id: user._id, 
+        isAdmin: user.isAdmin,
+        email: user.email,
+        mobileNumber: user.mobileNumber,
+       },
       process.env.JWT_SECRET || 'qwerty123',
-      {expiresIn: '96h'}
+      { expiresIn: '96h' }
     );
     
     res.status(201).json({ user, token });
@@ -69,7 +73,7 @@ router.post('/login', async (req, res) => {
         mobileNumber: user.mobileNumber,
        },
       process.env.JWT_SECRET || 'qwerty123',
-      { expiresIn: '48h' }
+      { expiresIn: '96h' }
     );
 
     res.status(200).json({ message: "Login successful", token });
