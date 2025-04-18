@@ -42,7 +42,7 @@ router.get("/search", async (req, res) => {
         const products = await mongoproducts.find({ name: { $regex: regex } }).populate("category");
 
         if (products.length === 0) {
-            return res.status(404).json({ message: "Inga produkter matchade sökningen" });
+            return res.status(200).json({ message: "Inga produkter matchade sökningen" });
         }
 
         res.status(200).json(products);
