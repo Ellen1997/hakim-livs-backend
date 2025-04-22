@@ -1,5 +1,7 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const Order = require('../models/userOrders.js');
+const mongoproducts = require("../models/mongoproducts.js");
 const { authenticateToken, isAdmin } = require("../middleware/auth.js")
 
 const router = express.Router();
@@ -64,13 +66,13 @@ router.post('/', authenticateToken, async (req, res) => {
 
       const formattedProducts = await Promise.all(products.map(async (p) => {
         if (!p.productId || !mongoose.Types.ObjectId.isValid(p.productId)) {
-          return res.status(400).json({message: `Ogiltig produkt-ID: ${p.productId}`});
+          throw new Error(`Ogiltig produkt-ID: ${p.productId}`);
         }
-      const product = await Product.findById(p.productId); 
+      const product = await mongoproducts.findById(p.productId); 
       
         if (!product) 
           {
-            return res.status(404).json({ message: `Produkt med ID ${p.productId} hittades inte` });
+             throw new Error(`Produkt med ID ${p.productId} hittades inte`);
           }
       
         return {
@@ -97,7 +99,7 @@ router.post('/', authenticateToken, async (req, res) => {
       res.status(201).json(savedOrder);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Kunde inte skapa order' });
+      res.status(500).json({ message: 'Kunde inte skapa order', error: err.message });
     }
   });
 
