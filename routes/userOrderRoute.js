@@ -6,7 +6,7 @@ const router = express.Router();
 
 // HÄR SKA DET VARA AUTHTOKEN OCH ISADMIN också (!!!) på alla som har med order å göra
 
-router.get("/", authenticateToken, isAdmin, async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const {status} = req.query;
         let query = {}
