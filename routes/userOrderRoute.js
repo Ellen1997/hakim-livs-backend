@@ -18,6 +18,7 @@ router.get("/", async (req, res) => {
     const orders = await Order.find(query)
     .sort({ createdAt: -1})
     .populate("user.userId", "username mobileNumber")
+    .populate('products.productId');
     
     res.json(orders);
     } catch (error) {
@@ -40,7 +41,9 @@ router.get("/myOrders", authenticateToken, async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id).populate("user.userId", "email");
+        const order = await Order.findById(req.params.id)
+        .populate("user.userId")
+        .populate("products.productId")
 
         if (!order) {
             return res.status(404).json({ message: "Kunde ej hitta order"});
