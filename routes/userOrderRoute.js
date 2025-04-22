@@ -4,8 +4,6 @@ const { authenticateToken, isAdmin } = require("../middleware/auth.js")
 
 const router = express.Router();
 
-// HÄR SKA DET VARA AUTHTOKEN OCH ISADMIN också (!!!) på alla som har med order å göra
-
 router.get("/", async (req, res) => {
     try {
         const {status} = req.query;
@@ -27,7 +25,6 @@ router.get("/", async (req, res) => {
     }
 })
 
-//HÄR måste vi ha authenticateToken från början annars funkar den inte eftersom req.user.id infon finns inne i token
 router.get("/myOrders", authenticateToken, async (req, res) => {
     try {
         const orders = await Order.find({ "user.userId": req.user.id}).sort({createdAt: -1});
@@ -49,18 +46,6 @@ router.get("/:id", async (req, res) => {
             return res.status(404).json({ message: "Kunde ej hitta order"});
         }
 
-        //VI LÄGGER IN NEDSTTÅENDE SEN!! nu måste vi ba kunna testa 
-        //Vi ska ju även lägga till authenticateToken och isAdmin
-
-
-        // const yourOrder = order.user.userId.toString()=== req.user.id;
-        // const isAdmin = req.user.isAdmin;
-
-        // if(!yourOrder && !isAdmin) {
-        //     return res.status(403).json({message: "Du har ej behörighet att se denna order"})
-        // }
-
-
         res.json(order);
     } catch (error) {
         console.error(error);
@@ -78,6 +63,9 @@ router.post('/', authenticateToken, async (req, res) => {
       }
 
       const formattedProducts = await Promise.all(products.map(async (p) => {
+        if (!p.productId || !mongoose.Types.ObjectId.isValid(p.productId)) {
+          return res.status(400).json({message: `Ogiltig produkt-ID: ${p.productId}`});
+        }
       const product = await Product.findById(p.productId); 
       
         if (!product) 
@@ -89,8 +77,10 @@ router.post('/', authenticateToken, async (req, res) => {
           productId: product._id, 
           name: product.name,
           price: product.price,
-          quantity: p.quantity
-        };
+          quantity: p.quantity,
+          img: product.img,
+          description: product.description
+        }; 
       }));
   
       const order = new Order({
@@ -110,8 +100,6 @@ router.post('/', authenticateToken, async (req, res) => {
       res.status(500).json({ message: 'Kunde inte skapa order' });
     }
   });
-
-//NEDAN OCKSÅ BARA FÖR ADMIN så man kan ändra status mellan pending, paid, shipped osv
 
 router.put('/:id', async (req, res) => {
 
