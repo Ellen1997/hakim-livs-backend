@@ -67,7 +67,7 @@ router.get('/:id', async (req, res) => {
 })
 
 
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, isAdmin, async (req, res) => {
     try {
         const {name, price, description, stock, category, img} = req.body;
 
@@ -101,7 +101,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         const { name, description, price, stock, category, img } = req.body;
@@ -137,7 +137,7 @@ router.put('/:id', async (req, res) => {
 });
 
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authenticateToken, isAdmin, async (req, res) => {
     try {
         const { id } = req.params;
 

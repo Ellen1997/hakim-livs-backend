@@ -6,7 +6,7 @@ const { authenticateToken, isAdmin } = require("../middleware/auth.js")
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, isAdmin, async (req, res) => {
     try {
         const {status} = req.query;
         let query = {}
@@ -38,7 +38,7 @@ router.get("/myOrders", authenticateToken, async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticateToken, isAdmin, async (req, res) => {
     try {
         const order = await Order.findById(req.params.id)
         .populate("user.userId", "username mobileNumber")
@@ -103,7 +103,7 @@ router.post('/', authenticateToken, async (req, res) => {
     }
   });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', authenticateToken, isAdmin, async (req, res) => {
 
     try {
     const updatedOrder = await Order.findByIdAndUpdate(
@@ -125,7 +125,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateToken, isAdmin, async (req, res) => {
 
     try {
 
