@@ -6,7 +6,7 @@ const router = express.Router();
 
 // HÄR SKA DET VARA AUTHTOKEN OCH ISADMIN också (!!!) på alla som har med order å göra
 
-router.get("/", async (req, res) => {
+router.get("/", authenticateToken, isAdmin, async (req, res) => {
     try {
         const {status} = req.query;
         let query = {}
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
     const orders = await Order.find(query)
     .sort({ createdAt: -1})
     .populate("user.userId", "username mobileNumber")
-    .populate('products.productId');
+    .populate("products.productId", "name price description img");
     
     res.json(orders);
     } catch (error) {
@@ -42,8 +42,8 @@ router.get("/myOrders", authenticateToken, async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         const order = await Order.findById(req.params.id)
-        .populate("user.userId")
-        .populate("products.productId")
+        .populate("user.userId", "username mobileNumber")
+        .populate("products.productId", "name price description img");
 
         if (!order) {
             return res.status(404).json({ message: "Kunde ej hitta order"});
@@ -76,6 +76,22 @@ router.post('/', authenticateToken, async (req, res) => {
       if (!products || !Array.isArray(products) || products.length === 0) {
         return res.status(400).json({ message: "Produkter krävs för att lägga en order" });
       }
+
+      const formattedProducts = await Promise.all(products.map(async (p) => {
+      const product = await Product.findById(p.productId); 
+      
+        if (!product) 
+          {
+            return res.status(404).json({ message: `Produkt med ID ${p.productId} hittades inte` });
+          }
+      
+        return {
+          productId: product._id, 
+          name: product.name,
+          price: product.price,
+          quantity: p.quantity
+        };
+      }));
   
       const order = new Order({
         user: {
@@ -83,7 +99,7 @@ router.post('/', authenticateToken, async (req, res) => {
           email: req.user.email,
           mobileNumber: req.user.mobileNumber 
         },
-        products,
+        products: formattedProducts,
         total,
       });
   
