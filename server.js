@@ -8,6 +8,8 @@ const categorysRoute = require("./routes/categoryRoute.js")
 const auth = require("./routes/auth.js")
 const userOrders = require("./routes/userOrderRoute.js")
 const path = require("path");
+const analyticsRoutes = require("./routes/analytics");
+
 
 
 const app = express();
@@ -41,6 +43,8 @@ app.use("/api/products", mongproductsRoute);
 app.use("/api/category", categorysRoute);
 app.use("/api/users", auth);
 app.use("/api/orders", userOrders)
+app.use("/api/analytics", analyticsRoutes);
+
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "views", "index.html"));

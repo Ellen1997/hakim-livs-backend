@@ -18,7 +18,7 @@ const authenticateToken = (req, res, next) => {
 
 const isAdmin = (req, res, next) => {
   if (!req.user || !req.user.isAdmin) {
-    return res.status(403).json({ error: "Förbjuden åtkomst - Admins endast" });
+    return res.status(404).json({ error: "Not found!" });
   }
   next();
 };
